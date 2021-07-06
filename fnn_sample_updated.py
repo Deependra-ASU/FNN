@@ -22,12 +22,13 @@ from imblearn.over_sampling import SMOTE
 # Variable Setup
 # Available datasets: KDDTrain+.txt, KDDTest+.txt, etc. More read Data Set Introduction.html within the NSL-KDD dataset folder
 # Type the training dataset file name in ''
-TrainingDataPath='./'
+################Edited####################
+TrainingDataPath='./'                                                               #Added TrainingData path
 TrainingData='Training-a1-a2.csv'
 
-TestingDataPath='./'
+TestingDataPath='./'                                                                #Added TestingData path
 TestingData='Testing-a1-a2-a3.csv'
-
+##########################################
 # Batch Size
 BatchSize=10
 # Epohe Size
@@ -40,9 +41,12 @@ NumEpoch=10
 # The file can be a .txt as well. 
 # If the dataset file has header, then keep header=0 otherwise use header=none
 # reference: https://www.shanelynn.ie/select-pandas-dataframe-rows-and-columns-using-iloc-loc-and-ix/
-dataset_train = pd.read_csv(TrainingDataPath+TrainingData, header=None)
+
+
+#################################Edited#################################
+###################Separate Train and Test DataSet######################
+dataset_train = pd.read_csv(TrainingDataPath+TrainingData, header=None)          
 X_train = dataset_train.iloc[:, 0:-2].values
-print(X_train)
 label_column = dataset_train.iloc[:, -2].values
 
 y_train = []
@@ -56,16 +60,9 @@ for i in range(len(label_column)):
 
 y_train = np.array(y_train)
 
-print(pd.value_counts(y_train))
-
-#######New#######
 dataset_test = pd.read_csv(TestingDataPath+TestingData, header=None)
 X_test = dataset_test.iloc[:, 0:-2].values
-
-
-
 label_column = dataset_test.iloc[:, -2].values
-
 
 y_test = []
 for i in range(len(label_column)):
@@ -76,10 +73,8 @@ for i in range(len(label_column)):
 
 # Convert list to array
 y_test = np.array(y_test)
-
-####################
-
-
+###########################Edited#######################################
+#########################################################################
 # Encoding categorical data (convert letters/words in numbers)
 # Reference: https://medium.com/@contactsunny/label-encoder-vs-one-hot-encoder-in-machine-learning-3fc273365621
 # The following code work without warning in Python 3.6 or older. Newer versions suggest to use ColumnTransformer
@@ -101,20 +96,15 @@ ct = ColumnTransformer(
     remainder='passthrough'                         # Leave the rest of the columns untouched
 )
 
-X_train = np.array(ct.fit_transform(X_train), dtype=np.float)
+############################EDITED########################################
+X_train = np.array(ct.fit_transform(X_train), dtype=np.float)               #Separate OneHotEncoder for Train and Test data
 
 X_test = np.array(ct.transform(X_test), dtype=np.float)
-
-print('xtrain',X_train.shape)
-
-print('Xtest',X_test.shape)
-
+##########################################################################
 # Splitting the dataset into the Training set and Test set (75% of data are used for training)
 # reference: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html
 #from sklearn.model_selection import train_test_split
 #X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.25, random_state = 0)
-
-
 # Perform feature scaling. For ANN you can use StandardScaler, for RNNs recommended is 
 # MinMaxScaler. 
 # referece: https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.StandardScaler.html
